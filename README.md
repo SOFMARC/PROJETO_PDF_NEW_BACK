@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+# ProjetoPdf-Back
+=======
+>>>>>>> 4f31318 (add)
 
 # Backend Leitor de pdf python
 
@@ -99,3 +105,7 @@ Tudo finalizado 🚀 para inciar a aplicação vá até a pasta backend e rode o
 ```bash
   python3 api/api.py
 ```
+<<<<<<< HEAD
+=======
+>>>>>>> 924368f (add)
+>>>>>>> 4f31318 (add)
