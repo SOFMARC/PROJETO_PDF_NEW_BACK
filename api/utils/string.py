@@ -1,0 +1,1 @@
+empy_text_column = "nao informado"
