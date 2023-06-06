@@ -1,1 +1,0 @@
-path = '/home/wilson/PDF'
