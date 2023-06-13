@@ -1,10 +1,10 @@
 import os
 from functools import wraps
 from datetime import date
-from utils.config import path
+from src.Interface.Api.utils.config import path
 from datetime import datetime, timedelta
-from utils.clear import clear_folder_upload
-from works.work_controller import work_controller
+from src.Interface.Api.utils.clear import clear_folder_upload
+from src.Interface.Api.works.work_controller import work_controller
 from src.Infra.External.jwt.index import JwtFactory
 from src.Infra.External.pyodbc.index import Database
 from src.Infra.External.flask.index import FlaskFactory
