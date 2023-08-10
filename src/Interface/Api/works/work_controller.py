@@ -41,9 +41,7 @@ def work_controller(filepath, filename, filepathimage, user_id, task_id):
 def insert_nfs(data, user_id, task_id):
     print("####################### dados chegouu  #######################")
     try:
-        
-        ("####################### dados chegouu v222  #######################")
-        
+                
         info = json.loads(data)
 
         print("CNPJ Tomador:", info['cnpj_tomador'])
@@ -71,15 +69,22 @@ def insert_nfs(data, user_id, task_id):
         print("Valor do ISS:", info['valor_iss'])
         print("IR:", info['ir'])
 
+
+        print("####################### dados chegou final  #######################")
+
         unique_id:int = Id()
 
         user_id = user_id
+
+        print("##################################### insert nota init #####################################")
 
         database = Database()
 
         db = NotaFiscalRepositoryInfra(database)
 
         database.connect()
+
+        print("##################################### insert nota ##################################### ")
 
         id_nota = db.save(user_id, unique_id, info['local_incidencia_imposto'], info['descricao_atividades'], info['porcentagem'], info['servicos'], info['deducoes'], info['base_de_calculo'], info['inss'], info['iss_retido'], info['endereco_obra'], info['cno'], info['codigo_servico'],info['valor_total_deducoes'], info['aliquota'], info['valor_total_nota'],  info['valor_iss'], info['ir'])
         
@@ -99,9 +104,15 @@ def insert_nfs(data, user_id, task_id):
 
         database.close()
 
+
+        print("######################Chegeui######################")
+
+
         for key, value in info.items():
-            if value == "nao informado":
+            if value == "0,00":
+
                 print("######################Valor não informado para a propriedade:######################", key)
+                
                 db_v2 = Database()
 
                 db_v2.connect()
@@ -121,6 +132,8 @@ def insert_nfs(data, user_id, task_id):
                 
                 db_v2.close()
             else:
+                print("######################Entrei aqui######################")
+
                 db_v2 = Database()
 
                 db_v2.connect()

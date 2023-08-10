@@ -31,6 +31,13 @@ class Database:
         self.cursor.execute('select u.id, tp2.per_nome, u.email from usuarios u inner join tab_perfil tp2 on u.id_perfil = tp2.per_id where u.email = ?', email)
 
         return self.cursor.fetchall()
+
+    
+    def relatorio(self, id):
+        print('relatorio')
+        self.cursor.execute('EXEC REL_NOTAFISCAL @id_cliente = ?', id)
+
+        return self.cursor.fetchall()
     
 
     def get_user_v2(self, email):
@@ -92,6 +99,8 @@ class Database:
         commando = f"""INSERT INTO SQL_DATA_PDF.dbo.prestadores
                         (id_usuario, id_nota, cnpj_prestador, razao_prestador, insc_mun_prestador, endereco_prestador)
                         VALUES({user_id}, '{id_nota}', '{cnpj_prestador}', '{razao_prestador}', '{insc_mun_prestador}', '{endereco_prestador}')"""
+        
+        print("insere prestador", commando)
 
         self.cursor.execute(commando)
         self.cnxn.commit()
@@ -101,23 +110,52 @@ class Database:
                         (id_usuario, id_nota, cnpj_tomador, razao_tomador, insc_mun_tomador, endereco_tomador)
                         VALUES({user_id}, '{id_nota}', '{cnpj_tomador}', '{razao_tomador}', '{insc_mun_tomador}', '{endereco_tomado}')"""
 
+
+        print("insere tomador", commando)
+
         self.cursor.execute(commando)
         self.cnxn.commit()
 
     def insert_nota_fiscal(self, user_id, id_nota, local_incidencia_imposto, descricao_atividades, porcentagem, servicos, deducoes, base_de_calculo, inss, iss_retido, endereco_obra, cno, codigo_servico, valor_total_deducoes, aliquota, valor_total_nota, valor_iss, ir):
-        commando = f"""INSERT INTO SQL_DATA_PDF.dbo.notas_fiscais
-                        (id_usuario, id_nota, local_incidencia_imposto, descricao_atividades, porcentagem, servicos, deducoes, base_de_calculo, inss, iss_retido, endereco_obra, cno, codigo_servico, valor_total_deducoes, aliquota, valor_total_nota, valor_iss, ir)  
-                        VALUES({user_id}, '{id_nota}', '{local_incidencia_imposto}', '{descricao_atividades}', '{porcentagem}', '{servicos}', '{deducoes}', '{base_de_calculo}', '{inss}', '{iss_retido}', '{endereco_obra}', '{cno}', '{codigo_servico}', '{valor_total_deducoes}', '{aliquota}', '{valor_total_nota}', '{valor_iss}', '{ir}')"""
         
+        commando = f"""
+                EXEC INSERT_NOTASFISCAIS 
+                @id_usuario = {user_id}, 
+                @id_nota = '{id_nota}', 
+                @local_incidencia_imposto = '{local_incidencia_imposto}', 
+                @descricao_atividades = '{descricao_atividades}',
+                @porcentagem = '{porcentagem}', 
+                @servicos = '{servicos}',
+                @deducoes = '{deducoes}',
+                @base_de_calculo = '{base_de_calculo}',
+                @inss = '{inss}', 
+                @iss_retido = '{iss_retido}',
+                @endereco_obra = '{endereco_obra}', 
+                @cno = '{cno}',
+                @codigo_servico = '{codigo_servico}',
+                @valor_total_deducoes = '{valor_total_deducoes}',
+                @aliquota = '{aliquota}',
+                @valor_total_nota = '{valor_total_nota}', 
+                @valor_iss = '{valor_iss}',
+                @ir = '{ir}';
+        """
+
+
+        print("####### meu commando ###########", commando)
+
+
         self.cursor.execute(commando)
         self.cnxn.commit()
-
-        # Recuperar o ID do último registro inserido
-        select_command = "SELECT SCOPE_IDENTITY() AS InsertedID"
-        self.cursor.execute(select_command)
+        
+        # Recuperar o ID retornado pela procedure
+        self.cursor.execute("SELECT @@IDENTITY AS InsertedID;")
         inserted_id = self.cursor.fetchone()[0]
 
+        print("####### meu id ###########", inserted_id)
+
         return inserted_id
+        
+        
 
     def insert_uploads(self, id_usuario, data_upload, nome_arquivo , sucesso, status_id, task_id):
 
@@ -143,6 +181,8 @@ class Database:
         commando = f"""INSERT INTO SQL_DATA_PDF.dbo.upload_logs
                         (id_upload, data_log, descricao)
                         VALUES('{id_upload}', '{data_log}', '{descricao}')"""
+
+        print("insert uploads lpgs", commando)
 
         self.cursor.execute(commando)
         self.cnxn.commit()

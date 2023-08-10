@@ -194,9 +194,8 @@ def user_uploads(usuario):
                 db = Database() 
                 db.connect()
                 
-                
                 try:
-                    res = db.get_user_upload(usuario[0][0])
+                    res = db.get_user_upload(usuario[0][0]) #(usuario[0][0]
 
                     users = [{'upload_id': row[0], 'data': row[2], 'nome': row[3], 'status_upload': row[4], 'task_id': row[6], 'status_task':row[8]} for row in res]
 
@@ -216,6 +215,45 @@ def user_uploads(usuario):
             return factory.jsonify( status="not authentication",  res = 400)
     else:
         return factory.jsonify( status="not authentication",  res = 400)
+
+
+
+@app.route('/user/relatoio', methods = ['GET'])
+@autenticar
+def user_relatorio(usuario):
+    if usuario:
+        if usuario[0]!= []:
+            try:
+                db = Database() 
+                db.connect()
+                
+                try:
+                    res = db.relatorio(usuario[0][4])
+                    
+                    print("###############################RELATÓRIO###############################")
+                    print(usuario[0][4])
+
+                    users = [{'razao_prestador': row[0], 'cnpj_prestador': row[1], 'nim_nota_fiscal': row[2], 'codigo_servico': row[3], 'mun_emissao': row[4], 'mun_prestacao':row[5], 'valor_total_nota':row[6], 'base_de_calculo':row[7], 'aliquota':row[8], 'valor_iss':row[9], 'status':row[10]} for row in res]
+
+                    db.close()
+
+                    if res == []:
+
+                        return factory.jsonify( status="uploads empy",  res = 200 )
+                    else:
+                        #return factory.jsonify( upload_id=res[0][0], data=res[0][2],nome=res[0][3], status_upload=res[0][4], task_id=res[0][6], status_task=res[0][8],  res = 200 )
+                        return factory.jsonify(relatorio=users)
+                finally:
+                    print("fim update")
+            finally:
+                print("fim")
+        else:
+            return factory.jsonify( status="not authentication",  res = 400)
+    else:
+        return factory.jsonify( status="not authentication",  res = 400)
+
+
+
 
 @app.route('/user/all', methods = ['GET'])
 @autenticar

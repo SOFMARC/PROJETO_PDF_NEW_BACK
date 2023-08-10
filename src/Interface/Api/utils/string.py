@@ -1,1 +1,1 @@
-empy_text_column = "nao informado"
+empy_text_column = "0,00"
